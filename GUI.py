@@ -260,17 +260,17 @@ class PenteGUI:
             # Build window with table
             win = tk.Toplevel(self.root)
             win.title(f"Aggregated Comparison: {os.path.basename(latest)}")
-            cols = ['position', 'player', 'heuristic', 'depth', 'mm_time_sum', 'ab_time_sum', 'time_delta', 'mm_nodes_sum', 'ab_nodes_sum', 'nodes_delta']
+            cols = ['position', 'player', 'heuristic', 'mm_time_sum', 'ab_time_sum', 'time_delta', 'mm_nodes_sum', 'ab_nodes_sum', 'nodes_delta']
             tree = ttk.Treeview(win, columns=cols, show='headings')
             for c in cols:
                 tree.heading(c, text=c)
-                tree.column(c, width=110 if c in ('position','player','heuristic','depth') else 140, anchor='center')
+                tree.column(c, width=120 if c in ('position','player','heuristic') else 140, anchor='center')
             for r in rows:
                 tree.insert('', 'end', values=[r.get(c, '') for c in cols])
             tree.pack(fill='both', expand=True)
 
             # Add note
-            tk.Label(win, text="Aggregated sums comparing Minimax vs Alpha-Beta within the same heuristic and depth.").pack(pady=6)
+            tk.Label(win, text="Aggregated sums comparing Minimax vs Alpha-Beta within the same heuristic (depth=2).\nLower time/nodes is better.").pack(pady=6)
         except Exception as e:
             messagebox.showerror("Error", f"Failed to show comparison: {e}")
 

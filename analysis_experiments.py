@@ -33,7 +33,7 @@ POSITIONS = {
 }
 
 # Simpler, focused comparison set
-# Focused quick comparison set (keeps runtime low)
+# Quick comparison set (simple & fast)
 MODES = [
     ("minimax_h1", 2),
     ("alphabeta_h1", 2),
@@ -134,7 +134,7 @@ def run_experiments(tag: str = "default") -> List[Dict[str, Any]]:
 
 
 def aggregate(results: List[Dict[str, Any]]):
-    """Aggregate by (position, player, heuristic) comparing minimax vs alphabeta sums."""
+    """Aggregate by (position, player, heuristic) comparing minimax vs alphabeta sums (simple view)."""
     # buckets: {(pos, player, h): {mm_sum_time, mm_sum_nodes, ab_sum_time, ab_sum_nodes}}
     buckets: Dict[tuple, Dict[str, float]] = {}
     for r in results:
