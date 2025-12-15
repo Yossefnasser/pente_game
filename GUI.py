@@ -14,7 +14,7 @@ class PenteGUI:
         self.margin = 20
         
         self.game = PenteGame()
-        self.ai_players = {} # {WHITE: ai_instance, BLACK: ai_instance}
+        self.ai_players = {} 
         self.game_over = False
         
         self._create_widgets()
