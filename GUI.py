@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
 import time
-from game_logic import PenteGame, BOARD_SIZE, WHITE, BLACK, EMPTY
-from ai_engine import PenteAI
+from game_logic  import PenteGame, BOARD_SIZE, WHITE, BLACK, EMPTY
+from ai_engine   import PenteAI
 
 class PenteGUI:
     def __init__(self, root):
