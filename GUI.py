@@ -3,6 +3,9 @@ from tkinter import messagebox, ttk
 import time
 from game_logic  import PenteGame, BOARD_SIZE, WHITE, BLACK, EMPTY
 from ai_engine   import PenteAI
+from analysis_experiments import run_experiments, run_aggregated
+import os
+import json
 
 class PenteGUI:
     def __init__(self, root):
@@ -55,6 +58,7 @@ class PenteGUI:
 
         # Buttons
         tk.Button(control_frame, text="New Game", command=self.start_game, bg="#4CAF50", fg="white").grid(row=2, column=2, padx=10)
+        tk.Button(control_frame, text="Run & Compare (Quick)", command=self.run_and_show_comparison, bg="#2196F3", fg="white").grid(row=2, column=4, padx=10)
         
         # Stats
         self.status_label = tk.Label(self.root, text="Select Mode and Start Game", font=("Arial", 12, "bold"))
@@ -220,6 +224,55 @@ class PenteGUI:
         self.game_over = True
         self.status_label.config(text="GAME OVER: " + result, fg="red")
         messagebox.showinfo("Game Over", result)
+
+    def run_and_show_comparison(self):
+        self.update_status("Running quick analysis and showing comparison...")
+        self.root.update()
+        try:
+            # Run aggregated analysis
+            run_aggregated("gui")
+            # Immediately show the latest aggregated table
+            self.show_aggregated_table()
+            self.update_status("Comparison ready.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to run/show comparison: {e}")
+            self.update_status("Comparison failed.")
+
+    def show_aggregated_table(self):
+        # Look for latest aggregated csv and display in a table
+        try:
+            os.makedirs("results", exist_ok=True)
+            files = [f for f in os.listdir("results") if f.endswith('.csv') and 'aggregated' in f]
+            if not files:
+                messagebox.showinfo("No Aggregated Results", "Run 'Run & Compare (Quick)' first.")
+                return
+            files.sort(reverse=True)
+            latest = os.path.join("results", files[0])
+
+            # Read CSV
+            rows = []
+            with open(latest, 'r', encoding='utf-8') as f:
+                import csv as _csv
+                reader = _csv.DictReader(f)
+                for row in reader:
+                    rows.append(row)
+
+            # Build window with table
+            win = tk.Toplevel(self.root)
+            win.title(f"Aggregated Comparison: {os.path.basename(latest)}")
+            cols = ['position', 'player', 'heuristic', 'depth', 'mm_time_sum', 'ab_time_sum', 'time_delta', 'mm_nodes_sum', 'ab_nodes_sum', 'nodes_delta']
+            tree = ttk.Treeview(win, columns=cols, show='headings')
+            for c in cols:
+                tree.heading(c, text=c)
+                tree.column(c, width=110 if c in ('position','player','heuristic','depth') else 140, anchor='center')
+            for r in rows:
+                tree.insert('', 'end', values=[r.get(c, '') for c in cols])
+            tree.pack(fill='both', expand=True)
+
+            # Add note
+            tk.Label(win, text="Aggregated sums comparing Minimax vs Alpha-Beta within the same heuristic and depth.").pack(pady=6)
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to show comparison: {e}")
 
 if __name__ == "__main__":
     root = tk.Tk()
