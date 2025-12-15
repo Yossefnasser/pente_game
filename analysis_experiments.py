@@ -156,6 +156,9 @@ def aggregate(results: List[Dict[str, Any]]):
     # Produce list rows
     rows = []
     for (pos, ply, h), b in buckets.items():
+        # Derived metrics for readability
+        speedup = round((b['mm_time'] / b['ab_time']), 2) if b['ab_time'] > 0 else None
+        nodes_reduction_pct = round(((b['mm_nodes'] - b['ab_nodes']) / b['mm_nodes']) * 100.0, 1) if b['mm_nodes'] > 0 else None
         rows.append({
             'position': pos,
             'player': ply,
@@ -166,6 +169,8 @@ def aggregate(results: List[Dict[str, Any]]):
             'ab_nodes_sum': b['ab_nodes'],
             'time_delta': round(b['mm_time'] - b['ab_time'], 4),
             'nodes_delta': b['mm_nodes'] - b['ab_nodes'],
+            'speedup': speedup,
+            'nodes_reduction_pct': nodes_reduction_pct,
         })
     return rows
 
@@ -177,7 +182,7 @@ def run_aggregated(tag: str = "default") -> List[Dict[str, Any]]:
     ts = time.strftime("%Y%m%d-%H%M%S")
     os.makedirs("results", exist_ok=True)
     agg_csv = os.path.join("results", f"{tag}-aggregated-{ts}.csv")
-    keys = ['position', 'player', 'heuristic', 'mm_time_sum', 'ab_time_sum', 'mm_nodes_sum', 'ab_nodes_sum', 'time_delta', 'nodes_delta']
+    keys = ['position', 'player', 'heuristic', 'mm_time_sum', 'ab_time_sum', 'time_delta', 'speedup', 'mm_nodes_sum', 'ab_nodes_sum', 'nodes_delta', 'nodes_reduction_pct']
     with open(agg_csv, 'w', newline='', encoding='utf-8') as f:
         w = csv.DictWriter(f, fieldnames=keys)
         w.writeheader()

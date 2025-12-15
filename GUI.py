@@ -260,11 +260,12 @@ class PenteGUI:
             # Build window with table
             win = tk.Toplevel(self.root)
             win.title(f"Aggregated Comparison: {os.path.basename(latest)}")
-            cols = ['position', 'player', 'heuristic', 'mm_time_sum', 'ab_time_sum', 'time_delta', 'mm_nodes_sum', 'ab_nodes_sum', 'nodes_delta']
+            cols = ['position', 'player', 'heuristic', 'mm_time_sum', 'ab_time_sum', 'time_delta', 'speedup', 'mm_nodes_sum', 'ab_nodes_sum', 'nodes_delta', 'nodes_reduction_pct']
             tree = ttk.Treeview(win, columns=cols, show='headings')
             for c in cols:
                 tree.heading(c, text=c)
-                tree.column(c, width=120 if c in ('position','player','heuristic') else 140, anchor='center')
+                width = 120 if c in ('position','player','heuristic') else 130
+                tree.column(c, width=width, anchor='center')
             for r in rows:
                 tree.insert('', 'end', values=[r.get(c, '') for c in cols])
             tree.pack(fill='both', expand=True)

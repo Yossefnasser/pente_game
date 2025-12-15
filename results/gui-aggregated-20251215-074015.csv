@@ -1,0 +1,9 @@
+position,player,heuristic,mm_time_sum,ab_time_sum,mm_nodes_sum,ab_nodes_sum,time_delta,nodes_delta
+center,BLACK,h1,0.1729,0.0806,1637,776,0.0923,861
+center,BLACK,h2,0.2244,0.137,1637,796,0.0874,841
+center,WHITE,h1,0.2016,0.1564,1635,1324,0.0452,311
+center,WHITE,h2,0.5834,0.1802,1635,1391,0.4032,244
+open_three,BLACK,h1,0.4268,0.0579,3486,454,0.3689,3032
+open_three,BLACK,h2,0.472,0.075,3486,570,0.397,2916
+open_three,WHITE,h1,0.3732,0.0407,3486,248,0.3325,3238
+open_three,WHITE,h2,0.5699,0.0618,3486,364,0.5081,3122
